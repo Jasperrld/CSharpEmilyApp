@@ -1,11 +1,21 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using CSharpEmilyApp.ViewModels;
+using CSharpEmilyApp.Views;
+ namespace CSharpEmilyApp;
+ 
+ public partial class MainWindow : Window
+ {
+     
+     private MainWindowViewModel _vm;
+     public MainWindow()
+     {
+         InitializeComponent();
 
-namespace CSharpEmilyApp;
+         // this way is better to switch between pages
+         // MainContent.Content = new PlanningView();
 
-public partial class MainWindow : Window
-{
-    public MainWindow()
-    {
-        InitializeComponent();
-    }
-}
+         _vm = new MainWindowViewModel();
+         DataContext = _vm;
+     }
+ }

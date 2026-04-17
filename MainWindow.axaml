@@ -4,6 +4,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="CSharpEmilyApp.MainWindow"
+        xmlns:views="clr-namespace:CSharpEmilyApp.Views"
+        x:DataType="vm:MainWindowViewModel"
+        xmlns:vm="using:CSharpEmilyApp.ViewModels"
+        xmlns:comp="using:CSharpEmilyApp.Views.Components"
         Title="CSharpEmilyApp">
-    Welcome to Avalonia!
+    
+    <!-- <ContentControl x:Name="MainContent"/> -->
+    <SplitView
+        DisplayMode="CompactInline"
+        IsPaneOpen="{Binding IsPaneOpen}"
+        OpenPaneLength="100"
+        CompactPaneLength="30"
+        PaneBackground="#FFF"
+        x:Name="Container"
+        >
+        <SplitView.Pane>
+            <comp:SideBarView/>
+        </SplitView.Pane>
+        
+       <SplitView.Content>
+            <StackPanel>
+               <ContentControl DockPanel.Dock="Top" Background="#FFF" Margin="0 10" BorderBrush="#ddd" BorderThickness="0 0 0 1">
+                   <TextBlock Margin="10 0 0 0">Emily</TextBlock>
+               </ContentControl>
+               <ContentControl DockPanel.Dock="Right" Background="#f0f0f0" Margin="10 0 0 0" Content="{Binding CurrentView}" />
+            </StackPanel>
+       </SplitView.Content>
+    </SplitView>
 </Window>

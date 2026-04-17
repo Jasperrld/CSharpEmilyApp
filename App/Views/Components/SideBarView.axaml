@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CSharpEmilyApp.ViewModels"
+             x:Class="CSharpEmilyApp.Views.Components.SideBarView"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Border BorderBrush="#ddd" BorderThickness="0,0,1,0">
+        <StackPanel>
+            <Button Classes="nav-button" Content="=" Click="OnToggleClick"/>
+            <Button x:Name="PlanningButton" Classes="nav-button" Click="OnPlanningClick" Content="Planning"/>
+            <Button x:Name="OtherButton" Classes="nav-button" Click="OnOtherClick"    Content="Other"/>
+        </StackPanel>
+    </Border>
+
+</UserControl>

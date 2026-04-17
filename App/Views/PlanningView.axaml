@@ -1,0 +1,14 @@
+<UserControl 
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:CSharpEmilyApp.ViewModels"
+    xmlns:comp="using:CSharpEmilyApp.Views.Components"
+    x:Class="CSharpEmilyApp.Views.PlanningView"
+    x:DataType="vm:PlanningViewModel"
+    
+>
+    <Grid RowDefinitions="Auto,*" ShowGridLines="True">
+        <TextBlock>hoi</TextBlock>
+    </Grid>
+    
+</UserControl>
