@@ -1,8 +1,9 @@
+using System.ComponentModel;
 using CSharpEmilyApp.Models;
 
 namespace CSharpEmilyApp.ViewModels;
 
-public class JobViewModel
+public class JobViewModel : ViewModelBase, INotifyPropertyChanged
 {
     private readonly Job _job;
     

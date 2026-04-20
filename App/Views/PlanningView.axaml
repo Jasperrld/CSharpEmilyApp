@@ -7,8 +7,24 @@
     x:DataType="vm:PlanningViewModel"
     
 >
-    <Grid RowDefinitions="Auto,*" ShowGridLines="True">
-        <TextBlock>hoi</TextBlock>
+    <Grid>
+        <!-- Loading -->
+        <TextBlock IsVisible="{Binding IsLoading}"
+                   Text="Loading..."
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <!-- Error -->
+        <TextBlock IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                   Text="{Binding Error}"
+                   Foreground="Red"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <!-- Data -->
+        <StackPanel IsVisible="{Binding !IsLoading}">
+            <TextBlock Text="{Binding PlanningResponse.id}"/>
+        </StackPanel>
     </Grid>
     
 </UserControl>

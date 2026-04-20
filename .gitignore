@@ -35,7 +35,11 @@ Thumbs.db
 *.nupkg
 packages/
 
+
+
 # =========================
 # Avalonia (optioneel cache)
 # =========================
 *.g.cs
+
+.appsettings.json
