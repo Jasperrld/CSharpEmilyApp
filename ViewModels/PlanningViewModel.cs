@@ -5,20 +5,16 @@ namespace CSharpEmilyApp.ViewModels;
 
 public class PlanningViewModel : ViewModelBase
 {
-    private GetPlanning.PlanningResponse _planningResponse;
+    private GetPlanning.PlanningApiResponse? _planningResponse;
     private bool _isLoading = true;
     private string? _error;
 
-    public GetPlanning.PlanningResponse? PlanningResponse
+    public GetPlanning.PlanningApiResponse? PlanningResponse
     {
         get => _planningResponse;
-        set
-        {
-            _planningResponse = value;
-            OnPropertyChanged(nameof(PlanningResponse));
-        }
+        set { _planningResponse = value; OnPropertyChanged(nameof(PlanningResponse)); }
     }
-    
+
     public bool IsLoading
     {
         get => _isLoading;
@@ -42,12 +38,12 @@ public class PlanningViewModel : ViewModelBase
         {
             IsLoading = true;
             PlanningResponse = await new GetPlanning().GetAsync();
-            Console.WriteLine($"Got response: {PlanningResponse?.id ?? "null"}");
-
+            Console.WriteLine($"Got {PlanningResponse?.Results.Count ?? 0} items");
         }
         catch (Exception ex)
         {
             Error = ex.Message;
+            Console.WriteLine($"ERROR: {ex}");
         }
         finally
         {
