@@ -19,6 +19,7 @@ public partial class SideBarView : UserControl
     {
         PlanningButton.Classes.Remove("nav-button-active");
         OtherButton.Classes.Remove("nav-button-active");
+        TimerButton.Classes.Remove("nav-button-active");
         active.Classes.Add("nav-button-active");
     }
 
@@ -35,5 +36,11 @@ public partial class SideBarView : UserControl
     {
         GetVm()?.OtherView();
         SetActiveButton(OtherButton);
+    }
+
+    private void OnTimerClick(object sender, RoutedEventArgs e)
+    {
+        GetVm()?.GoToTimer();
+        SetActiveButton(TimerButton);
     }
 }

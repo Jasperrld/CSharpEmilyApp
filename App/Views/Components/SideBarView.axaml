@@ -8,7 +8,8 @@
         <StackPanel>
             <Button Classes="nav-button" Content="=" Click="OnToggleClick"/>
             <Button x:Name="PlanningButton" Classes="nav-button" Click="OnPlanningClick" Content="Planning"/>
-            <Button x:Name="OtherButton" Classes="nav-button" Click="OnOtherClick"    Content="Other"/>
+            <Button x:Name="TimerButton" Classes="nav-button" Click="OnTimerClick" Content="Timer"/>
+            <Button x:Name="OtherButton" Classes="nav-button" Click="OnOtherClick" Content="Other"/>
         </StackPanel>
     </Border>
 

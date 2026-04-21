@@ -53,6 +53,12 @@ public class MainWindowViewModel : ViewModelBase
         ActiveWindow = "Planning";
     }
 
+    public void GoToTimer()
+    {
+        CurrentView = new TimerView();
+        ActiveWindow = "Timer";
+    }
+
     public void GoBack()
     {
         CurrentView = new PlanningView();

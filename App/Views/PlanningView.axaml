@@ -4,31 +4,28 @@
              xmlns:api="using:CSharpEmilyApp.API"
              x:Class="CSharpEmilyApp.Views.PlanningView"
              x:DataType="vm:PlanningViewModel">
-
+    
     <Grid>
-        <TextBlock IsVisible="{Binding IsLoading}"
-                   Text="Loading..."
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-
-        <TextBlock IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                   Text="{Binding Error}"
-                   Foreground="Red"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-
-        <ItemsControl IsVisible="{Binding !IsLoading}"
-                      ItemsSource="{Binding PlanningResponse.Results}">
+        <TextBlock IsVisible="{Binding isLoading}"
+                   Text="...loading"/>
+        
+        <TextBlock
+            IsVisible="{Binding Error}"
+            Text="{Binding Error}"
+            Foreground="red"
+            />
+        <ItemsControl ItemsSource="{Binding PlanningResponse.Results}"
+                      IsVisible="{Binding !isLoading}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="api:GetPlanning+PlanningResponse">
-                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4">
-                        <TextBlock Text="{Binding Id}"/>
-                        <TextBlock Text="{Binding User.Username}"/>
-                        <TextBlock Text="{Binding TimerFor}"/>
-                        <TextBlock Text="{Binding Order.Description}"/>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Id }"/>
                     </StackPanel>
+                    
                 </DataTemplate>
+                
             </ItemsControl.ItemTemplate>
+            
         </ItemsControl>
     </Grid>
 

@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CSharpEmilyApp.ViewModels"
+             xmlns:api="using:CSharpEmilyApp.API"
+             x:Class="CSharpEmilyApp.Views.TimerView"
+             x:DataType="vm:TimerViewModel">
+
+    <Grid>
+        <TextBlock IsVisible="{Binding IsLoading}"
+                   Text="Loading..."
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <TextBlock IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                   Text="{Binding Error}"
+                   Foreground="Red"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <TextBlock
+                   Text="{Binding TimerResponse.Pagination.PageSize }"
+                   Foreground="Red"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+                   
+        <ItemsControl IsVisible="{Binding !IsLoading}"
+                      ItemsSource="{Binding TimerResponse.Results}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="api:GetTimers+TimerResponse">
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4">
+                        <TextBlock Text="{Binding Id}"/>
+                        <TextBlock Text="{Binding User.Username}"/>
+                        <TextBlock Text="{Binding TimerFor}"/>
+                        <TextBlock Text="{Binding Order.Description}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+
+</UserControl>

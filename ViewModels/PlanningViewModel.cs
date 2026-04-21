@@ -8,25 +8,40 @@ public class PlanningViewModel : ViewModelBase
     private GetPlanning.PlanningApiResponse? _planningResponse;
     private bool _isLoading = true;
     private string? _error;
+    public bool HasError => !string.IsNullOrEmpty(_error);
 
     public GetPlanning.PlanningApiResponse? PlanningResponse
     {
         get => _planningResponse;
-        set { _planningResponse = value; OnPropertyChanged(nameof(PlanningResponse)); }
+        set
+        {
+            _planningResponse = value;
+            OnPropertyChanged(nameof(PlanningResponse));
+        }
     }
 
-    public bool IsLoading
+    public bool isLoading
     {
         get => _isLoading;
-        set { _isLoading = value; OnPropertyChanged(nameof(IsLoading)); }
+        set
+        {
+            _isLoading = value;
+            OnPropertyChanged(nameof(isLoading));
+        }
     }
 
     public string? Error
     {
         get => _error;
-        set { _error = value; OnPropertyChanged(nameof(Error)); }
+        set
+        {
+            _error = value;
+            OnPropertyChanged(nameof(Error));
+            OnPropertyChanged(nameof(HasError));
+        }
     }
 
+    // load planning
     public PlanningViewModel()
     {
         LoadPlanning();
@@ -36,18 +51,19 @@ public class PlanningViewModel : ViewModelBase
     {
         try
         {
-            IsLoading = true;
+            isLoading = true;
             PlanningResponse = await new GetPlanning().GetAsync();
-            Console.WriteLine($"Got {PlanningResponse?.Results.Count ?? 0} items");
+            Console.WriteLine($"Got {PlanningResponse.Results.Count} results");
         }
         catch (Exception ex)
         {
             Error = ex.Message;
-            Console.WriteLine($"ERROR: {ex}");
+            Console.WriteLine(ex);
         }
         finally
         {
-            IsLoading = false;
+            isLoading = false;
         }
     }
+    
 }
