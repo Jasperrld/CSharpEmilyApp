@@ -42,4 +42,4 @@ packages/
 # =========================
 *.g.cs
 
-.appsettings.json
+appsettings.json
