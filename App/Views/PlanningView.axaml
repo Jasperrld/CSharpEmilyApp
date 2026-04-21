@@ -23,6 +23,7 @@
                             <TextBlock Text="{Binding Id }"/>
                             <TextBlock Text="{Binding StartDate}"/>
                             <TextBlock Text="{Binding EndDate}"/>
+                            <TextBlock Text="{Binding Number}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -1,6 +1,6 @@
 namespace CSharpEmilyApp.ViewModels;
 
-public class MachineViewModel
+public class MachineViewModel : ViewModelBase
 {
     
 }
