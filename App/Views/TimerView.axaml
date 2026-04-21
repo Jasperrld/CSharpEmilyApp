@@ -5,37 +5,40 @@
              x:Class="CSharpEmilyApp.Views.TimerView"
              x:DataType="vm:TimerViewModel">
 
-    <Grid>
-        <TextBlock IsVisible="{Binding IsLoading}"
+    <Grid RowDefinitions="Auto,Auto,*">
+        <TextBlock Grid.Row="0" IsVisible="{Binding IsLoading}"
                    Text="Loading..."
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
 
-        <TextBlock IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+        <TextBlock Grid.Row="1" IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                    Text="{Binding Error}"
                    Foreground="Red"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
 
-        <TextBlock
+        <TextBlock Grid.Row="2"
                    Text="{Binding TimerResponse.Pagination.PageSize }"
                    Foreground="Red"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
-                   
-        <ItemsControl IsVisible="{Binding !IsLoading}"
-                      ItemsSource="{Binding TimerResponse.Results}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="api:GetTimers+TimerResponse">
-                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4">
-                        <TextBlock Text="{Binding Id}"/>
-                        <TextBlock Text="{Binding User.Username}"/>
-                        <TextBlock Text="{Binding TimerFor}"/>
-                        <TextBlock Text="{Binding Order.Description}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+
+            <ItemsControl IsVisible="{Binding !IsLoading}"
+                          ItemsSource="{Binding TimerResponse.Results}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="api:GetTimers+TimerResponse">
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4">
+                            <TextBlock Text="{Binding Id}"/>
+                            <TextBlock Text="{Binding User.Username}"/>
+                            <TextBlock Text="{Binding TimerFor}"/>
+                            <TextBlock Text="{Binding Order.Description}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
     </Grid>
 
 </UserControl>

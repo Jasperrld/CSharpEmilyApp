@@ -5,28 +5,30 @@
              x:Class="CSharpEmilyApp.Views.PlanningView"
              x:DataType="vm:PlanningViewModel">
     
-    <Grid>
-        <TextBlock IsVisible="{Binding isLoading}"
+    <Grid RowDefinitions="Auto,Auto,*">
+        <TextBlock Grid.Row="0" IsVisible="{Binding isLoading}"
                    Text="...loading"/>
         
-        <TextBlock
+        <TextBlock Grid.Row="1"
             IsVisible="{Binding Error}"
             Text="{Binding Error}"
             Foreground="red"
             />
-        <ItemsControl ItemsSource="{Binding PlanningResponse.Results}"
-                      IsVisible="{Binding !isLoading}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="api:GetPlanning+PlanningResponse">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Id }"/>
-                    </StackPanel>
-                    
-                </DataTemplate>
-                
-            </ItemsControl.ItemTemplate>
-            
-        </ItemsControl>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding PlanningResponse.Results}"
+                          IsVisible="{Binding !isLoading}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="api:GetPlanning+PlanningResponse">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Id }"/>
+                            <TextBlock Text="{Binding StartDate}"/>
+                            <TextBlock Text="{Binding EndDate}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
     </Grid>
 
 </UserControl>
