@@ -83,6 +83,23 @@ public class PlanningViewModel : ViewModelBase
 
     private static DateTime GetMonday(DateTime date)
         => date.AddDays(-(int)date.DayOfWeek == 0 ? 6 : (int)date.DayOfWeek - 1);
+    
+    private PlanningJob? _selectedJob;
+
+    public PlanningJob? SelectedPlanningJob
+    {
+        get => _selectedJob;
+        set
+        {
+            _selectedJob = value;
+            OnPropertyChanged(nameof(SelectedPlanningJob));
+            OnPropertyChanged(nameof(HasSelectedJob));            
+        }
+    }   
+    public ICommand SelectJobCommand { get; }
+    public ICommand CloseJobCommand { get; }
+    public bool HasSelectedJob => _selectedJob != null;
+
 
     public GetPlanning.PlanningApiResponse? PlanningResponse
     {
@@ -119,6 +136,8 @@ public class PlanningViewModel : ViewModelBase
     {
         GoToPreviousWeekCommand = new RelayCommand(_ => GoToPreviousWeek());
         GoToNextWeekCommand = new RelayCommand(_ => GoToNextWeek());
+        SelectJobCommand = new RelayCommand(job => SelectedPlanningJob = job as PlanningJob);
+        CloseJobCommand = new RelayCommand(_ => SelectedPlanningJob = null);  
         LoadPlanning();
     }
 

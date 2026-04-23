@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CSharpEmilyApp.ViewModels"
+             x:Class="CSharpEmilyApp.Views.Components.PlanningOrderPopup"
+             x:DataType="vm:PlanningViewModel">
+
+    <Border Background="White"
+            CornerRadius="8"
+            Padding="16"
+            MinWidth="300">
+        <StackPanel Spacing="8">
+            <TextBlock Text="{Binding SelectedPlanningJob.OrderNumber}"
+                       FontWeight="Bold"
+                       FontSize="16"/>
+            <TextBlock Text="{Binding SelectedPlanningJob.Company}"/>
+            <TextBlock Text="{Binding SelectedPlanningJob.Description}"
+                       TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding SelectedPlanningJob.MachineName}"
+                       Foreground="#666"/>
+        </StackPanel>
+    </Border>
+</UserControl>

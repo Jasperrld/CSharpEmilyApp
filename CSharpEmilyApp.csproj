@@ -26,4 +26,11 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="App\Views\Components\PlanningOrderPopup.axaml.cs">
+        <DependentUpon>PlanningOrderPopup.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>
