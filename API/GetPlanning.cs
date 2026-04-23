@@ -12,7 +12,7 @@ public class GetPlanning : ApiService
         var start = (startDate ?? DateTime.Today).ToString("yyyy-MM-dd");
         var end = (endDate ?? DateTime.Today.AddDays(14)).ToString("yyyy-MM-dd");
 
-        var results = await GetAsync<List<PlanningResponse>>($"/v1/orders/planning?startDate=2026-02-23&endDate=2026-02-23");
+        var results = await GetAsync<List<PlanningResponse>>($"/v1/orders/planning?startDate={start}&endDate={end}");
         
         return new PlanningApiResponse { Results = results ?? new() };    
     }

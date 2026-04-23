@@ -22,7 +22,6 @@
                    Foreground="Red"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
 
             <ItemsControl IsVisible="{Binding !IsLoading}"
                           ItemsSource="{Binding TimerResponse.Results}">
@@ -37,7 +36,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </ScrollViewer>
 
     </Grid>
 

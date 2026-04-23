@@ -1,7 +1,36 @@
 using System;
+using System.Collections.Generic;
 using CSharpEmilyApp.API;
+using System.Linq;
+using System.Windows.Input;
 
 namespace CSharpEmilyApp.ViewModels;
+
+public class PlanningCell
+{
+    public string MachineName { get; set; } = "";
+    public List<PlanningJob> Jobs { get; set; } = new();
+}
+
+//job card
+public class PlanningJob
+{
+    public string OrderNumber { get; set; } = "";
+    public string Company { get; set; } = "";
+    public string Description { get; set; } = "";
+    public double TotalHours { get; set; }
+}
+
+// row in grid, date with cel per machine
+public class PlanningRow
+{
+    public string Date { get; set; } = "";
+    public List<PlanningCell> Cells { get; set; } = new();
+    
+    public string DayName => DateTime.TryParse(Date, out var d)
+        ? d.ToString("dddd d MMMM", new System.Globalization.CultureInfo("nl-NL"))
+        : Date;
+}
 
 public class PlanningViewModel : ViewModelBase
 {
@@ -9,6 +38,35 @@ public class PlanningViewModel : ViewModelBase
     private bool _isLoading = true;
     private string? _error;
     public bool HasError => !string.IsNullOrEmpty(_error);
+    
+    private List<string> _machineNames = new();
+    private List<PlanningRow> _planningRows = new();
+    
+    private DateTime _weekStart = GetMonday(DateTime.Today);
+    
+    public ICommand GoToPreviousWeekCommand { get; }
+    public ICommand GoToNextWeekCommand { get; }
+
+    public DateTime WeekStart
+    {
+        get => _weekStart;
+        set
+        {
+            _weekStart = value;
+            OnPropertyChanged(nameof(WeekStart));
+            OnPropertyChanged(nameof(WeekLabel));
+            LoadPlanning();
+        }
+    }
+
+    public string WeekLabel =>
+        $"{WeekStart:d MMM} - {WeekStart.AddDays(6):d MMM yyyy}";
+
+    public void GoToPreviousWeek() => WeekStart = WeekStart.AddDays(-7);
+    public void GoToNextWeek() => WeekStart = WeekStart.AddDays(7);
+
+    private static DateTime GetMonday(DateTime date)
+        => date.AddDays(-(int)date.DayOfWeek == 0 ? 6 : (int)date.DayOfWeek - 1);
 
     public GetPlanning.PlanningApiResponse? PlanningResponse
     {
@@ -44,6 +102,8 @@ public class PlanningViewModel : ViewModelBase
     // load planning
     public PlanningViewModel()
     {
+        GoToPreviousWeekCommand = new RelayCommand(_ => GoToPreviousWeek());
+        GoToNextWeekCommand = new RelayCommand(_ => GoToNextWeek());
         LoadPlanning();
     }
 
@@ -52,7 +112,9 @@ public class PlanningViewModel : ViewModelBase
         try
         {
             isLoading = true;
-            PlanningResponse = await new GetPlanning().GetAsync();
+            PlanningResponse = await new GetPlanning().GetAsync(WeekStart, WeekStart.AddDays(6));
+            if (PlanningResponse?.Results != null)
+                BuildGrid(PlanningResponse.Results);
             Console.WriteLine($"Got {PlanningResponse.Results.Count} results");
         }
         catch (Exception ex)
@@ -65,5 +127,66 @@ public class PlanningViewModel : ViewModelBase
             isLoading = false;
         }
     }
-    
+
+    public List<string> MachineNames
+    {
+        get => _machineNames;
+        set { _machineNames = value; OnPropertyChanged(nameof(MachineNames)); }
+    }
+
+    public List<PlanningRow> PlanningRows
+    {
+        get => _planningRows;
+        set { _planningRows = value; OnPropertyChanged(nameof(PlanningRows)); }
+    }
+
+    private void BuildGrid(List<GetPlanning.PlanningResponse> results)
+    {
+        // get all machine names
+        var machines = results
+            .SelectMany(r => r.Machines)
+            .Select(m => m.Name ?? "")
+            .Distinct()
+            .OrderBy(n => n)
+            .ToList();
+
+        // get all dates
+        var dates = results
+            .SelectMany(r => r.Machines)
+            .SelectMany(m => m.Planning)
+            .Select(p => p.Date ?? "")
+            .Where(d => !string.IsNullOrEmpty(d))
+            .Distinct()
+            .OrderBy(d => d)
+            .ToList();
+
+        // build grid
+        var rows = dates.Select(date => new PlanningRow
+        {
+            Date = date,
+            Cells = machines.Select(machineName => new PlanningCell
+            {
+                MachineName = machineName,
+                Jobs = results
+                    .Where(r => r.Machines.Any(m =>
+                        m.Name == machineName &&
+                        m.Planning.Any(p => p.Date == date)))
+                    .Select(r => new PlanningJob
+                    {
+                        OrderNumber = r.Number ?? "",
+                        Company = r.Company ?? "",
+                        Description = r.Description ?? "",
+                        TotalHours = r.Machines
+                            .FirstOrDefault(m => m.Name == machineName)
+                            ?.TotalHours ?? 0
+                    })
+                    .ToList()
+            }).ToList()
+        }).ToList();
+
+        MachineNames = machines;
+        PlanningRows = rows;
+    }
+
+   
 }

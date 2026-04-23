@@ -11,6 +11,7 @@
         Title="CSharpEmilyApp">
     
     <!-- <ContentControl x:Name="MainContent"/> -->
+
     <SplitView
         DisplayMode="CompactInline"
         IsPaneOpen="{Binding IsPaneOpen}"
@@ -22,20 +23,22 @@
         <SplitView.Pane>
             <comp:SideBarView/>
         </SplitView.Pane>
-        
+
        <SplitView.Content>
-            <!-- <StackPanel> -->
-            <!--    <ContentControl DockPanel.Dock="Top" Background="#FFF" Margin="0 10" BorderBrush="#ddd" BorderThickness="0 0 0 1"> -->
-            <!--        <TextBlock Margin="10 0 0 0">Emily</TextBlock> -->
-            <!--    </ContentControl> -->
-            <!--    <ContentControl DockPanel.Dock="Right" Background="#f0f0f0" Margin="10 0 0 0" Content="{Binding CurrentView}" /> -->
-            <!-- </StackPanel> -->
-            <Grid RowDefinitions="Auto,*">
-                <ContentControl Grid.Row="0" Background="#FFF" Margin="0 10" BorderBrush="#ddd" BorderThickness="0 0 0 1">
-                    <TextBlock Margin="10 0 0 0">Emily</TextBlock>
+           <Grid RowDefinitions="Auto, *">
+                <ContentControl Grid.Row="0" Margin="0 10 0 0" BorderBrush="#ddd" BorderThickness="0 0 0 1">
+                    <TextBlock Margin="0 0 0 0">Emily</TextBlock>
                 </ContentControl>
-                <ContentControl Grid.Row="1" Background="#f0f0f0" Margin="10 0 0 0" Content="{Binding CurrentView}"/>
+               
+                <Grid Grid.Row="1" Background="#f0f0f0" RowDefinitions="*" Margin="0 0 0 0">
+                    <ScrollViewer  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <ContentControl Grid.Row="0" Background="#FFF" Margin="10 10 10 0" Content="{Binding CurrentView}"/>
+                    </ScrollViewer>
+                </Grid>
             </Grid>
+
        </SplitView.Content>
+
     </SplitView>
+
 </Window>

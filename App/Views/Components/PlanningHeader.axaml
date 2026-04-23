@@ -5,4 +5,33 @@
              x:Class="CSharpEmilyApp.Views.Components.PlanningHeader"
              x:DataType="vm:PlanningViewModel">
     
+    <Grid ColumnDefinitions="*,Auto" Background="#0089B4" Height="40">
+        <TextBlock Grid.Column="0"
+                   Text="DAG PLANNING"
+                   Foreground="White"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"
+                   Margin="16,0"/>
+
+        <StackPanel Grid.Column="1"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Margin="0,0,16,0"
+                    Spacing="8">
+            <Button Content="&lt;"
+                    Command="{Binding GoToPreviousWeekCommand}"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderThickness="0"/>
+            <TextBlock Text="{Binding WeekLabel}"
+                       Foreground="White"
+                       VerticalAlignment="Center"/>
+            <Button Content="&gt;"
+                    Command="{Binding GoToNextWeekCommand}"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderThickness="0"/>
+        </StackPanel>
+    </Grid>
+    
 </UserControl>

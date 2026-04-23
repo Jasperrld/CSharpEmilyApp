@@ -8,6 +8,5 @@ public partial class PlanningHeader : UserControl
     public PlanningHeader()
     {
         InitializeComponent();
-        DataContext = new PlanningViewModel();
     }
 }

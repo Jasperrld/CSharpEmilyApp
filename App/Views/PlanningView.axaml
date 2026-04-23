@@ -1,68 +1,114 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:CSharpEmilyApp.ViewModels"
-             xmlns:api="using:CSharpEmilyApp.API"
              x:Class="CSharpEmilyApp.Views.PlanningView"
+             xmlns:component="using:CSharpEmilyApp.Views.Components"
              x:DataType="vm:PlanningViewModel">
-    
-    <Grid RowDefinitions="Auto,Auto,*">
-        <TextBlock Grid.Row="0" IsVisible="{Binding isLoading}"
-                   Text="...loading"/>
-        
-        <TextBlock Grid.Row="1"
-            IsVisible="{Binding Error}"
-            Text="{Binding Error}"
-            Foreground="red"
-            />
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding PlanningResponse.Results}"
-                          IsVisible="{Binding !isLoading}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="api:GetPlanning+PlanningResponse">
-                        <StackPanel>
-                            <TextBlock Text="{Binding Id }"/>
-                            <TextBlock Text="{Binding StartDate}"/>
-                            <TextBlock Text="{Binding EndDate}"/>
-                            <TextBlock Text="{Binding Number}"/>
-                            <ItemsControl ItemsSource="{Binding Machines}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="api:GetPlanning+PlanningMachine">
-                                        <StackPanel Margin="16,0,0,0">
-                                            <TextBlock Text="{Binding Name}"/>
-                                            <TextBlock Text="{Binding StartDate}"/>
-                                
-                                            <ItemsControl ItemsSource="{Binding Planning}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate x:DataType="api:GetPlanning+PlanningEntry">
-                                                        <StackPanel Margin="32,0,0,0">
 
-                                                        <TextBlock Text="{Binding Date}" Margin="32,0,0,0"/>
-                                                        <!-- personnel on planning -->
-                                                        <ItemsControl ItemsSource="{Binding Persons}">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate x:DataType="api:GetPlanning+PlanningPerson">
-                                                                    <StackPanel>
-                                                                    <TextBlock Text="{Binding Username}" Margin="48,0,0,0"/>
-                                                                    <TextBlock Text="{Binding Email}" Margin="48,0,0,0"/>
-                                                                    </StackPanel>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                        <TextBlock Text="{Binding AmountProduced}"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <component:PlanningHeader Grid.Row="0"/>
+
+        <TextBlock Grid.Row="1"
+                   IsVisible="{Binding isLoading}"
+                   Text="...loading"/>
+
+        <TextBlock Grid.Row="2"
+                   IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                   Text="{Binding Error}"
+                   Foreground="Red"/>
+
+        <ScrollViewer Grid.Row="3"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Machine name header -->
+                <Grid ColumnDefinitions="120,*">
+                    <Border Grid.Column="0"
+                            BorderBrush="#ddd"
+                            BorderThickness="0,0,1,1"
+                            Padding="8"
+                            >
+                        <TextBlock Text="Datum" FontWeight="Bold"/>
+                    </Border>
+                    <ItemsControl Grid.Column="1"
+                                  ItemsSource="{Binding MachineNames}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border Width="200"
+                                        BorderBrush="#ddd"
+                                        BorderThickness="0,0,1,1"
+                                        Padding="8"
+                                        >
+                                    <TextBlock Text="{Binding}" FontWeight="Bold"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+
+                <ItemsControl IsVisible="{Binding !isLoading}"
+                              ItemsSource="{Binding PlanningRows}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:PlanningRow">
+                            <Grid ColumnDefinitions="120,*">
+                                <Border Grid.Column="0"
+                                        BorderBrush="#ddd"
+                                        BorderThickness="0,0,1,1"
+                                        Padding="8">
+                                    <TextBlock Text="{Binding DayName}"
+                                               VerticalAlignment="Top"/>
+                                </Border>
+                                <ItemsControl Grid.Column="1"
+                                              ItemsSource="{Binding Cells}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:PlanningCell">
+                                            <Border Width="200"
+                                                    BorderBrush="#ddd"
+                                                    BorderThickness="0,0,1,1"
+                                                    Padding="8">
+                                                <ItemsControl ItemsSource="{Binding Jobs}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="vm:PlanningJob">
+                                                            <Border Background="#e8f4f8"
+                                                                    CornerRadius="4"
+                                                                    Padding="6"
+                                                                    Margin="0,0,0,4">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="{Binding OrderNumber}"
+                                                                               FontWeight="Bold"
+                                                                               FontSize="12"/>
+                                                                    <TextBlock Text="{Binding Company}"
+                                                                               FontSize="11"/>
+                                                                    <TextBlock Text="{Binding Description}"
+                                                                               FontSize="11"
+                                                                               TextWrapping="Wrap"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
         </ScrollViewer>
 
     </Grid>
-
 </UserControl>
