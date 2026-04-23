@@ -10,6 +10,8 @@ public class PlanningCell
 {
     public string MachineName { get; set; } = "";
     public List<PlanningJob> Jobs { get; set; } = new();
+    public double RowHeight { get; set; } // gezet vanuit BuildGrid
+
 }
 
 public class PlanningJob
@@ -29,6 +31,15 @@ public class PlanningRow
     public string DayName => DateTime.TryParse(Date, out var d)
         ? d.ToString("dddd d MMMM", new System.Globalization.CultureInfo("nl-NL"))
         : Date;
+    
+    public double RowHeight
+    {
+        get
+        {
+            var maxJobs = Cells.Any() ? Cells.Max(c => c.Jobs.Count) : 0;
+            return Math.Max(80, maxJobs * 120);
+        }
+    }
 }
 
 public class PlanningViewModel : ViewModelBase
@@ -159,19 +170,44 @@ public class PlanningViewModel : ViewModelBase
             .Select(i => WeekStart.AddDays(i).ToString("yyyy-MM-dd"))
             .ToList();
 
-        var rows = dates.Select(date => new PlanningRow
+        // var rows = dates.Select(date => new PlanningRow
+        // {
+        //     Date = date,
+        //     Cells = machines.Select(baseName => new PlanningCell
+        //     {
+        //         MachineName = baseName,
+        //         Jobs = results
+        //             .Where(r => r.Machines.Any(m =>
+        //                 getBaseMachineName(m.Name ?? "") == baseName &&
+        //                 m.Planning.Any(p => p.Date == date)))
+        //             .SelectMany(r => r.Machines
+        //                 .Where(m =>
+        //                     getBaseMachineName(m.Name ?? "") == baseName &&
+        //                     m.Planning.Any(p => p.Date == date))
+        //                 .Select(m => new PlanningJob
+        //                 {
+        //                     OrderNumber = r.Number ?? "",
+        //                     Company = r.Company ?? "",
+        //                     Description = r.Description ?? "",
+        //                     TotalHours = m.TotalHours ?? 0,
+        //                     MachineName = m.Name ?? ""
+        //                 }))
+        //             .ToList()
+        //     }).ToList()
+        // }).ToList();
+        
+        var rows = dates.Select(date =>
         {
-            Date = date,
-            Cells = machines.Select(baseName => new PlanningCell
+            var cells = machines.Select(machineName => new PlanningCell
             {
-                MachineName = baseName,
+                MachineName = machineName,
                 Jobs = results
                     .Where(r => r.Machines.Any(m =>
-                        getBaseMachineName(m.Name ?? "") == baseName &&
+                        m.Name == machineName &&
                         m.Planning.Any(p => p.Date == date)))
                     .SelectMany(r => r.Machines
                         .Where(m =>
-                            getBaseMachineName(m.Name ?? "") == baseName &&
+                            getBaseMachineName(m.Name ?? "") == machineName &&
                             m.Planning.Any(p => p.Date == date))
                         .Select(m => new PlanningJob
                         {
@@ -182,7 +218,13 @@ public class PlanningViewModel : ViewModelBase
                             MachineName = m.Name ?? ""
                         }))
                     .ToList()
-            }).ToList()
+            }).ToList();
+
+            var maxJobs = cells.Any() ? cells.Max(c => c.Jobs.Count) : 0;
+            var rowHeight = Math.Max(80, maxJobs * 120);
+            foreach (var cell in cells) cell.RowHeight = rowHeight;
+
+            return new PlanningRow { Date = date, Cells = cells };
         }).ToList();
 
         MachineNames = machines;

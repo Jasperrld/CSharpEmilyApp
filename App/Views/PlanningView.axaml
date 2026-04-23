@@ -18,21 +18,143 @@
                    Text="{Binding Error}"
                    Foreground="Red"/>
 
-        <ScrollViewer Grid.Row="3"
-                      HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <!-- Machine name header -->
-                <Grid ColumnDefinitions="120,*">
-                    <Border Grid.Column="0"
-                            BorderBrush="#ddd"
-                            BorderThickness="0,0,1,1"
-                            Padding="8"
-                            >
-                        <TextBlock Text="Datum" FontWeight="Bold"/>
-                    </Border>
-                    <ItemsControl Grid.Column="1"
-                                  ItemsSource="{Binding MachineNames}">
+        <!-- <ScrollViewer Grid.Row="3" -->
+        <!--               HorizontalScrollBarVisibility="Auto" -->
+        <!--               VerticalScrollBarVisibility="Auto"> -->
+        <!--     <StackPanel> -->
+        <!--         ~1~ Machine name header @1@ -->
+        <!--         <Grid ColumnDefinitions="180,*"> -->
+        <!--             <Border Grid.Column="0" -->
+        <!--                     BorderBrush="#ddd" -->
+        <!--                     BorderThickness="0,0,1,1" -->
+        <!--                     Padding="8" -->
+        <!--                     > -->
+        <!--                 <TextBlock Text="Datum" FontWeight="Bold"/> -->
+        <!--             </Border> -->
+        <!--             <ItemsControl Grid.Column="1" -->
+        <!--                           ItemsSource="{Binding MachineNames}"> -->
+        <!--                 <ItemsControl.ItemsPanel> -->
+        <!--                     <ItemsPanelTemplate> -->
+        <!--                         <StackPanel Orientation="Horizontal"/> -->
+        <!--                     </ItemsPanelTemplate> -->
+        <!--                 </ItemsControl.ItemsPanel> -->
+        <!--                 <ItemsControl.ItemTemplate> -->
+        <!--                     <DataTemplate x:DataType="x:String"> -->
+        <!--                         <Border Width="200" -->
+        <!--                                 BorderBrush="#ddd" -->
+        <!--                                 BorderThickness="0,0,1,1" -->
+        <!--                                 Padding="8" -->
+        <!--                                 > -->
+        <!--                             <TextBlock Text="{Binding}" FontWeight="Bold"/> -->
+        <!--                         </Border> -->
+        <!--                     </DataTemplate> -->
+        <!--                 </ItemsControl.ItemTemplate> -->
+        <!--             </ItemsControl> -->
+        <!--         </Grid> -->
+        <!-- -->
+        <!--         <ItemsControl IsVisible="{Binding !isLoading}" -->
+        <!--                       ItemsSource="{Binding PlanningRows}"> -->
+        <!--             <ItemsControl.ItemTemplate> -->
+        <!--                 <DataTemplate x:DataType="vm:PlanningRow"> -->
+        <!--                     <Grid ColumnDefinitions="180,*"> -->
+        <!--                         <Border Grid.Column="0" -->
+        <!--                                 BorderBrush="#ddd" -->
+        <!--                                 BorderThickness="0,0,1,1" -->
+        <!--                                 Padding="8"> -->
+        <!--                             <TextBlock Text="{Binding DayName}" -->
+        <!--                                        VerticalAlignment="Top"/> -->
+        <!--                         </Border> -->
+        <!--                         <ItemsControl Grid.Column="1" -->
+        <!--                                       ItemsSource="{Binding Cells}"> -->
+        <!--                             <ItemsControl.ItemsPanel> -->
+        <!--                                 <ItemsPanelTemplate> -->
+        <!--                                     <StackPanel Orientation="Horizontal"/> -->
+        <!--                                 </ItemsPanelTemplate> -->
+        <!--                             </ItemsControl.ItemsPanel> -->
+        <!--                             <ItemsControl.ItemTemplate> -->
+        <!--                                 <DataTemplate x:DataType="vm:PlanningCell"> -->
+        <!--                                     <Border Width="200" -->
+        <!--                                             BorderBrush="#ddd" -->
+        <!--                                             BorderThickness="0,0,1,1" -->
+        <!--                                             Padding="8"> -->
+        <!--                                         <ItemsControl ItemsSource="{Binding Jobs}"> -->
+        <!--                                             <ItemsControl.ItemTemplate> -->
+        <!--                                                 <DataTemplate x:DataType="vm:PlanningJob"> -->
+        <!--                                                     <Border Background="#e8f4f8" -->
+        <!--                                                             CornerRadius="4" -->
+        <!--                                                             Padding="6" -->
+        <!--                                                             Margin="0,0,0,4"> -->
+        <!--                                                         <StackPanel> -->
+        <!--                                                             <TextBlock Text="{Binding MachineName}" -->
+        <!--                                                                        FontFamily="11" -->
+        <!--                                                                        TextWrapping="Wrap"/> -->
+        <!--                                                             <TextBlock Text="{Binding OrderNumber}" -->
+        <!--                                                                        FontWeight="Bold" -->
+        <!--                                                                        FontSize="12"/> -->
+        <!--                                                             <TextBlock Text="{Binding Company}" -->
+        <!--                                                                        FontSize="11"/> -->
+        <!--                                                             <TextBlock Text="{Binding Description}" -->
+        <!--                                                                        FontSize="11" -->
+        <!--                                                                        TextWrapping="Wrap"/> -->
+        <!--                                                         </StackPanel> -->
+        <!--                                                     </Border> -->
+        <!--                                                 </DataTemplate> -->
+        <!--                                             </ItemsControl.ItemTemplate> -->
+        <!--                                         </ItemsControl> -->
+        <!--                                     </Border> -->
+        <!--                                 </DataTemplate> -->
+        <!--                             </ItemsControl.ItemTemplate> -->
+        <!--                         </ItemsControl> -->
+        <!--                     </Grid> -->
+        <!--                 </DataTemplate> -->
+        <!--             </ItemsControl.ItemTemplate> -->
+        <!--         </ItemsControl> -->
+        <!-- -->
+        <!--     </StackPanel> -->
+        <!-- </ScrollViewer> -->
+        
+        
+       <Grid Grid.Row="3" ColumnDefinitions="150,*">
+            <!-- Datum kolom vast, scrollt alleen verticaal mee via sync -->
+            <Grid Grid.Column="0" RowDefinitions="40,*">
+                <Border Grid.Row="0"
+                        Height="40"
+                        BorderBrush="#ddd"
+                        BorderThickness="0,0,1,1"
+                        Padding="8"
+                        Background="#f0f0f0">
+                    <TextBlock Text="Datum" FontWeight="Bold" VerticalAlignment="Center"/>
+                </Border>
+                <ScrollViewer Grid.Row="1"
+                              Name="DateScroll"
+                              VerticalScrollBarVisibility="Hidden"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding PlanningRows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PlanningRow">
+                                <Border BorderBrush="#ddd"
+                                        BorderThickness="0,0,1,1"
+                                        Padding="8"
+                                        Height="{Binding RowHeight}">
+                                    <TextBlock Text="{Binding DayName}"
+                                               VerticalAlignment="Top"
+                                               TextWrapping="NoWrap"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- Machine kolommen -->
+            <Grid Grid.Column="1" RowDefinitions="40,*">
+                <!-- Machine namen header -->
+                <ScrollViewer Grid.Row="0"
+                              Height="40"
+                              Name="HeaderScroll"
+                              HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding MachineNames}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal"/>
@@ -41,31 +163,30 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <Border Width="200"
+                                        Height="40"
                                         BorderBrush="#ddd"
                                         BorderThickness="0,0,1,1"
                                         Padding="8"
-                                        >
-                                    <TextBlock Text="{Binding}" FontWeight="Bold"/>
+                                        Background="#f0f0f0">
+                                    <TextBlock Text="{Binding}"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"/>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                </Grid>
+                </ScrollViewer>
 
-                <ItemsControl IsVisible="{Binding !isLoading}"
-                              ItemsSource="{Binding PlanningRows}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="vm:PlanningRow">
-                            <Grid ColumnDefinitions="120,*">
-                                <Border Grid.Column="0"
-                                        BorderBrush="#ddd"
-                                        BorderThickness="0,0,1,1"
-                                        Padding="8">
-                                    <TextBlock Text="{Binding DayName}"
-                                               VerticalAlignment="Top"/>
-                                </Border>
-                                <ItemsControl Grid.Column="1"
-                                              ItemsSource="{Binding Cells}">
+                <!-- Content -->
+                <ScrollViewer Grid.Row="1"
+                              Name="ContentScroll"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding PlanningRows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PlanningRow">
+                                <ItemsControl ItemsSource="{Binding Cells}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal"/>
@@ -74,6 +195,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="vm:PlanningCell">
                                             <Border Width="200"
+                                                    Height="{Binding RowHeight}"
                                                     BorderBrush="#ddd"
                                                     BorderThickness="0,0,1,1"
                                                     Padding="8">
@@ -86,7 +208,7 @@
                                                                     Margin="0,0,0,4">
                                                                 <StackPanel>
                                                                     <TextBlock Text="{Binding MachineName}"
-                                                                               FontFamily="11"
+                                                                               FontSize="11"
                                                                                TextWrapping="Wrap"/>
                                                                     <TextBlock Text="{Binding OrderNumber}"
                                                                                FontWeight="Bold"
@@ -105,13 +227,12 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-            </StackPanel>
-        </ScrollViewer>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
 
     </Grid>
 </UserControl>
