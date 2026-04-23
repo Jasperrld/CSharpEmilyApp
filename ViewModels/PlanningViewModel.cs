@@ -18,6 +18,7 @@ public class PlanningJob
     public string Company { get; set; } = "";
     public string Description { get; set; } = "";
     public double TotalHours { get; set; }
+    public string MachineName  { get; set; } = "";
 }
 
 public class PlanningRow
@@ -44,7 +45,13 @@ public class PlanningViewModel : ViewModelBase
     
     public ICommand GoToPreviousWeekCommand { get; }
     public ICommand GoToNextWeekCommand { get; }
-
+    
+    private static string getBaseMachineName(string name)
+    {
+        var idx = name.IndexOf('(');
+        return idx > 0 ? name[..idx].Trim() : name;
+    }
+    
     public DateTime WeekStart
     {
         get => _weekStart;
@@ -139,38 +146,41 @@ public class PlanningViewModel : ViewModelBase
 
     private void BuildGrid(List<GetPlanning.PlanningResponse> results)
     {
-        // get all machine names
         var machines = results
             .SelectMany(r => r.Machines)
             .Select(m => m.Name ?? "")
             .Distinct()
+            .GroupBy(getBaseMachineName)
+            .Select(g => g.Key)
             .OrderBy(n => n)
             .ToList();
-        
+
         var dates = Enumerable.Range(0, 7)
             .Select(i => WeekStart.AddDays(i).ToString("yyyy-MM-dd"))
             .ToList();
 
-        // build the view grid
         var rows = dates.Select(date => new PlanningRow
         {
             Date = date,
-            Cells = machines.Select(machineName => new PlanningCell
+            Cells = machines.Select(baseName => new PlanningCell
             {
-                MachineName = machineName,
+                MachineName = baseName,
                 Jobs = results
                     .Where(r => r.Machines.Any(m =>
-                        m.Name == machineName &&
+                        getBaseMachineName(m.Name ?? "") == baseName &&
                         m.Planning.Any(p => p.Date == date)))
-                    .Select(r => new PlanningJob
-                    {
-                        OrderNumber = r.Number ?? "",
-                        Company = r.Company ?? "",
-                        Description = r.Description ?? "",
-                        TotalHours = r.Machines
-                            .FirstOrDefault(m => m.Name == machineName)
-                            ?.TotalHours ?? 0
-                    })
+                    .SelectMany(r => r.Machines
+                        .Where(m =>
+                            getBaseMachineName(m.Name ?? "") == baseName &&
+                            m.Planning.Any(p => p.Date == date))
+                        .Select(m => new PlanningJob
+                        {
+                            OrderNumber = r.Number ?? "",
+                            Company = r.Company ?? "",
+                            Description = r.Description ?? "",
+                            TotalHours = m.TotalHours ?? 0,
+                            MachineName = m.Name ?? ""
+                        }))
                     .ToList()
             }).ToList()
         }).ToList();

@@ -85,6 +85,9 @@
                                                                     Padding="6"
                                                                     Margin="0,0,0,4">
                                                                 <StackPanel>
+                                                                    <TextBlock Text="{Binding MachineName}"
+                                                                               FontFamily="11"
+                                                                               TextWrapping="Wrap"/>
                                                                     <TextBlock Text="{Binding OrderNumber}"
                                                                                FontWeight="Bold"
                                                                                FontSize="12"/>

@@ -15,7 +15,7 @@
     <SplitView
         DisplayMode="CompactInline"
         IsPaneOpen="{Binding IsPaneOpen}"
-        OpenPaneLength="100"
+        OpenPaneLength="150"
         CompactPaneLength="30"
         PaneBackground="#FFF"
         x:Name="Container"
