@@ -12,7 +12,6 @@ public class PlanningCell
     public List<PlanningJob> Jobs { get; set; } = new();
 }
 
-//job card
 public class PlanningJob
 {
     public string OrderNumber { get; set; } = "";
@@ -21,7 +20,6 @@ public class PlanningJob
     public double TotalHours { get; set; }
 }
 
-// row in grid, date with cel per machine
 public class PlanningRow
 {
     public string Date { get; set; } = "";
@@ -99,7 +97,6 @@ public class PlanningViewModel : ViewModelBase
         }
     }
 
-    // load planning
     public PlanningViewModel()
     {
         GoToPreviousWeekCommand = new RelayCommand(_ => GoToPreviousWeek());
@@ -149,18 +146,12 @@ public class PlanningViewModel : ViewModelBase
             .Distinct()
             .OrderBy(n => n)
             .ToList();
-
-        // get all dates
-        var dates = results
-            .SelectMany(r => r.Machines)
-            .SelectMany(m => m.Planning)
-            .Select(p => p.Date ?? "")
-            .Where(d => !string.IsNullOrEmpty(d))
-            .Distinct()
-            .OrderBy(d => d)
+        
+        var dates = Enumerable.Range(0, 7)
+            .Select(i => WeekStart.AddDays(i).ToString("yyyy-MM-dd"))
             .ToList();
 
-        // build grid
+        // build the view grid
         var rows = dates.Select(date => new PlanningRow
         {
             Date = date,
